@@ -153,6 +153,10 @@ def cb_reset() -> None:
     save()
     flash("All data erased.", "info")
 
+def cb_nav_top() -> None:
+    choice = st.session_state.get("nav_top")
+    if choice:
+        st.session_state.page = choice
 
 def cb_set_key() -> None:
     ai.set_key(st.session_state.get("sel_api_key", ""))
@@ -402,6 +406,12 @@ def init() -> None:
             flash(f"{overdue} task(s) from earlier days were missed. Your remaining work was rescheduled automatically.", "warning")
         save()
 
+def top_nav() -> None:
+    """Navigation for phones. Hidden on desktop by CSS; the sidebar is used there."""
+    st.session_state["nav_top"] = st.session_state.page
+    with st.container(key="topnav"):
+        st.markdown("<div class='topbrand'>Smart Study Planner</div>", unsafe_allow_html=True)
+        st.pills("Menu", PAGES, key="nav_top", on_change=cb_nav_top, label_visibility="collapsed")
 
 def sidebar() -> None:
     state, today = S(), date.today()
@@ -1250,5 +1260,6 @@ if st.session_state.get("focus"):
     st.stop()
 T.inject()
 sidebar()
+top_nav()
 show_flash()
 PAGE_FUNCS[st.session_state.page]()

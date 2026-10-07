@@ -78,6 +78,13 @@ textarea,input{border-radius:14px!important}
 [data-testid="stProgress"] [role="progressbar"]>div{border-radius:99px;background:var(--grad)}
 [data-testid="stDataFrame"]{border-radius:16px;overflow:hidden}
 [data-testid="stButtonGroup"] button{border-radius:14px}
+/* phone: top navigation bar */
+.st-key-topnav{display:none}
+[data-testid="stExpandSidebarButton"],[data-testid="stSidebarCollapsedControl"]{background:linear-gradient(135deg,#ff8a6b,#ee5a91);border-radius:14px;box-shadow:0 8px 20px rgba(238,90,145,.4);color:#fff}
+[data-testid="stExpandSidebarButton"] *,[data-testid="stSidebarCollapsedControl"] *{color:#fff!important}
+.topbrand{font-family:'Fraunces',Georgia,serif;font-size:1.7rem;font-weight:500;letter-spacing:-.02em;margin:0 0 .6rem}
+@media(max-width:800px){.st-key-topnav{display:block;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1rem 1rem .8rem;box-shadow:var(--shadow)}
+.st-key-topnav button{min-height:2.6rem;font-size:.95rem}}
 /* focus timer */
 .focus-wrap{min-height:72vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .focus-label{color:var(--muted);font-size:1.1rem;margin-bottom:1.6rem}
@@ -86,7 +93,8 @@ textarea,input{border-radius:14px!important}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 """
 
-FOCUS_CSS = """[data-testid="stSidebar"],[data-testid="stSidebarCollapsedControl"],[data-testid="stExpandSidebarButton"]{display:none!important}
+FOCUS_CSS = """.st-key-topnav{display:none!important}
+[data-testid="stSidebar"], [data-testid="stSidebar"],[data-testid="stSidebarCollapsedControl"],[data-testid="stExpandSidebarButton"]{display:none!important}
 .block-container{max-width:760px}"""
 
 
