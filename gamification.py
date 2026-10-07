@@ -77,7 +77,7 @@ def refresh_day(state: dict, day: date) -> list[str]:
     target_met = stats["planned_min"] > 0 and stats["pct"] >= target
     if target_met and iso not in g["completed_days"]:
         g["completed_days"].append(iso)
-        msgs.append("🔥 Daily target reached — streak extended!")
+        msgs.append("Daily target reached — streak extended!")
     elif not target_met and iso in g["completed_days"]:
         g["completed_days"].remove(iso)
 
@@ -85,7 +85,7 @@ def refresh_day(state: dict, day: date) -> list[str]:
     if full and iso not in g["bonus_days"]:
         g["bonus_days"].append(iso)
         add_points(state, POINTS["daily_bonus"])
-        msgs.append(f"🎉 Whole daily plan completed! +{POINTS['daily_bonus']} bonus points")
+        msgs.append(f"Whole daily plan completed! +{POINTS['daily_bonus']} bonus points")
     elif not full and iso in g["bonus_days"]:
         g["bonus_days"].remove(iso)
         add_points(state, -POINTS["daily_bonus"])
@@ -119,7 +119,7 @@ def best_streak(state: dict) -> int:
 def streak_message(state: dict, today: date) -> str | None:
     days = state["gamification"]["completed_days"]
     if days and current_streak(state, today) == 0:
-        return "Your streak reset — no worries, every great streak starts with one good day. Today is a fresh start! 💪"
+        return "Your streak reset — no worries, every great streak starts with one good day. Today is a fresh start!"
     return None
 
 

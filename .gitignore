@@ -1,0 +1,5 @@
+
+.DS_Store
+study_data.json
+__pycache__/
+.venv/

@@ -229,3 +229,39 @@ def test_progress_formula_starts_at_user_value_and_reaches_100():
     assert D.subject_progress(subj) == 40
     subj["topics"][0]["status"] = "Completed"
     assert D.subject_progress(subj) == 100
+
+
+# ---- notes / handwriting-era additions: study material built from notes ----
+def test_notes_become_cards_and_quiz_offline():
+    import ai
+    notes = [{"name": "n", "text": "Photosynthesis is the process plants use to turn light into chemical energy.\n"
+              "Chlorophyll is the green pigment that absorbs light in chloroplasts.\n"
+              "Stomata are tiny pores on leaves that let gases move in and out.\n"
+              "Glucose is the sugar produced by photosynthesis and used as fuel."}]
+    mat, err = ai.build_material("Biology", "Photosynthesis", notes)
+    assert err is None and mat["source"].startswith("your notes")
+    assert len(mat["cards"]) >= 3 and len(mat["quiz"]) >= 3
+    assert all(q["options"][q["answer"]] for q in mat["quiz"])
+
+
+def test_topic_missing_from_notes_without_key_gives_clear_message():
+    import ai
+    ai._OVERRIDE.clear()
+    mat, err = ai.build_material("Biology", "Meiosis", [{"name": "n", "text": "Unrelated text about rivers."}])
+    if not ai.available():
+        assert mat is None and "notes" in err.lower()
+
+
+def test_generated_material_takes_priority_over_builtin():
+    from datetime import date, timedelta
+    s = D.default_state()
+    subj = D.make_subject("Mathematics", date.today() + timedelta(days=10), 3, 3)
+    topic = D.make_topic("Integration", 45)
+    subj["topics"].append(topic)
+    s["subjects"].append(subj)
+    s["materials"][topic["id"]] = {"source": "your notes", "summary": "x", "points": [], "definitions": [],
+                                   "cards": [{"front": "Q", "back": "A"}], "quiz": [
+                                       {"q": "q", "options": ["a", "b", "c", "d"], "answer": 1, "explanation": ""}]}
+    assert L.get_cards(s, subj, topic)[0]["front"] == "Q"
+    assert L.quiz_pool(s, subj, topic)[0]["q"] == "q"
+    assert L.get_content(subj, topic, s)["source"] == "your notes"

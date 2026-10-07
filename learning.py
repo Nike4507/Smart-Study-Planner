@@ -242,8 +242,17 @@ def find_entry(subject_name: str, topic_name: str) -> dict | None:
     return None
 
 
-def get_content(subject: dict, topic: dict) -> dict:
+def get_material(state: dict | None, topic: dict) -> dict | None:
+    """Content generated from the student's notes or the web (see ai.py), if any."""
+    return (state or {}).get("materials", {}).get(topic["id"])
+
+
+def get_content(subject: dict, topic: dict, state: dict | None = None) -> dict:
     """Summary page content for a topic."""
+    mat = get_material(state, topic)
+    if mat and mat.get("summary"):
+        return {"source": mat["source"], "summary": mat["summary"], "points": mat.get("points", []),
+                "definitions": mat.get("definitions", [])}
     entry = find_entry(subject["name"], topic["name"])
     if entry:
         return {"source": "built-in", "summary": entry["summary"], "points": entry["points"],
@@ -268,7 +277,10 @@ def get_content(subject: dict, topic: dict) -> dict:
 # --------------------------------------------------------------------------- #
 def get_cards(state: dict, subject: dict, topic: dict) -> list[dict]:
     entry = find_entry(subject["name"], topic["name"])
-    if entry:
+    mat = get_material(state, topic)
+    if mat and mat.get("cards"):
+        base = [{"front": c["front"], "back": c["back"], "custom": False} for c in mat["cards"]]
+    elif entry:
         base = [{"front": f, "back": b, "custom": False} for f, b in entry["cards"]]
     else:
         base = [
@@ -317,6 +329,9 @@ def record_card(state: dict, topic_id: str, key: str, known: bool, today: date |
 # Quizzes
 # --------------------------------------------------------------------------- #
 def quiz_pool(state: dict, subject: dict, topic: dict) -> list[dict]:
+    mat = get_material(state, topic)
+    if mat and mat.get("quiz"):
+        return list(mat["quiz"])
     entry = find_entry(subject["name"], topic["name"])
     if entry:
         return [{"q": q, "options": o, "answer": a, "explanation": e} for q, o, a, e in entry["quiz"]]
@@ -371,7 +386,7 @@ def finish_quiz(state: dict, subject_id: str, topic_id: str, score: int, total: 
     if pending:
         P.complete_task(state, pending[0]["id"], today, award=False)
         msgs.append("Planned quiz task marked complete.")
-    msgs += [f"🏅 New badge: {b}" for b in G.update_badges(state, today)]
+    msgs += [f"New badge: {b}" for b in G.update_badges(state, today)]
     return {"pct": pct, "weak": pct < 60, "messages": msgs}
 
 

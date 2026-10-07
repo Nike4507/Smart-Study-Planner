@@ -80,6 +80,8 @@ def default_state() -> dict:
         "custom_cards": {},    # topic_id -> [{front, back}]
         "card_log": {},        # iso date -> cards reviewed that day
         "quiz_history": [],
+        "notes": {},           # subject_id -> [{name, text}]  (typed, uploaded or read from handwriting)
+        "materials": {},       # topic_id -> generated summary / cards / quiz (from notes or the web)
         "settings": {"daily_card_target": 10, "daily_target_pct": 60, "plan_days": 7},
     }
 

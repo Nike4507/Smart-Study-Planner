@@ -117,3 +117,11 @@ git branch -M main
 git remote add origin https://github.com/<your-username>/smart-study-planner.git
 git push -u origin main
 ```
+
+## Redesign notes
+
+- **Navigation**: five pages only: Dashboard, Subjects, Planner (Today / Week plan / Schedule), Study (Learn / Flashcards / Quiz), Progress (Overview / Subjects / Rewards).
+- **Subjects flow**: New subject, then syllabus and notes on the next screen. Opening an existing subject goes to the same screen.
+- **Focus timer**: Dashboard, Start studying. The whole page becomes a timer; use Exit timer to leave.
+- **Handwriting, scans and web search** use the Anthropic API. Set `ANTHROPIC_API_KEY` or paste a key under Settings in the sidebar (kept in memory only). Without a key, typed, PDF, DOCX and TXT notes still produce flashcards and quizzes offline.
+- **Styling**: `theme.py` (CSS and fonts), `charts.py` (graphs), `.streamlit/config.toml` (base theme).

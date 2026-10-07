@@ -302,7 +302,7 @@ def complete_task(state: dict, task_id: str, today: date | None = None, award: b
         topic["done_min"] = topic.get("done_min", 0) + task["duration"]
         if D.topic_remaining(topic) == 0:
             topic["status"] = "Completed"
-            msgs.append(f"✅ Topic completed: {topic['name']}")
+            msgs.append(f"Topic completed: {topic['name']}")
         elif topic["status"] != "Completed":
             topic["status"] = "In progress"
     points = G.task_points(state, task) if award else 0
@@ -311,7 +311,7 @@ def complete_task(state: dict, task_id: str, today: date | None = None, award: b
     if points:
         msgs.insert(0, f"+{points} points")
     msgs += G.refresh_day(state, date.fromisoformat(task["date"]))
-    msgs += [f"🏅 New badge: {b}" for b in G.update_badges(state, today)]
+    msgs += [f"New badge: {b}" for b in G.update_badges(state, today)]
     return msgs
 
 
